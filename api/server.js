@@ -20,7 +20,7 @@ mongoose
 	.then(() => console.log('MongoDB connection successful'))
 	.catch(err => console.error(err));
 
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -39,6 +39,6 @@ app.use((err, req, res, next) => {
 	return res.status(errorStatus).send(errorMessage);
 });
 
-app.listen(8800, () => {
+app.listen(3000, () => {
 	console.log('Backend server is running!');
 });
