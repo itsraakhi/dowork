@@ -3,6 +3,12 @@ const createError = require('../utils/createError');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const cookieOptions = {
+	httpOnly: true,
+	secure: true,
+	sameSite: 'none'
+}
+
 module.exports.signup = async (req, res, next) => {
 	try {
 		const hash = await bcrypt.hash(req.body.password, 12);
@@ -22,7 +28,8 @@ module.exports.signup = async (req, res, next) => {
 		);
 
 		const { password, ...info } = newUser._doc;
-		res.cookie('accessToken', token, { httpOnly: true });
+		// res.cookie('accessToken', token, { httpOnly: true });
+		res.cookie('accessToken', token, cookieOptions);
 		res.status(200).send(info);
 	} catch (err) {
 		next(err);
@@ -46,7 +53,9 @@ module.exports.login = async (req, res, next) => {
 		);
 
 		const { password, ...info } = user._doc;
-		res.cookie('accessToken', token, { httpOnly: true });
+
+		// res.cookie('accessToken', token, { httpOnly: true });
+		res.cookie('accessToken', token, cookieOptions);
 		res.status(200).send(info);
 	} catch (err) {
 		next(err);
@@ -54,6 +63,7 @@ module.exports.login = async (req, res, next) => {
 };
 
 module.exports.logout = async (req, res) => {
-	res.clearCookie('accessToken', { sameSite: 'none', secure: true });
+	// res.clearCookie('accessToken', { sameSite: 'none', secure: true });
+	res.clearCookie('accessToken', cookieOptions);
 	res.status(200).send('User has been logged out.');
 };
